@@ -213,4 +213,4 @@ if st.session_state.logged_in:
     del_index = st.selectbox("Supprimer la ligne", options=range(0, list_length))
     st.button("Confirmer la suppression", on_click=delete_row, args=(del_index, headings))
 else:
-    st.warning(""Veuillez d'abord vous connecter.")
+    st.warning("Veuillez d'abord vous connecter.")
