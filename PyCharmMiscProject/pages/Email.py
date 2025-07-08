@@ -6,6 +6,7 @@ import ssl
 from email.message import EmailMessage
 import psycopg2
 
+# Database connection
 conn = psycopg2.connect(
     host=st.secrets["db"]["host"],
     database=st.secrets["db"]["database"],
@@ -16,11 +17,13 @@ conn = psycopg2.connect(
 )
 c = conn.cursor()
 
+# Session state initialization
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
     st.session_state.username = "demo_user"
 
+# Create table if not exists
 c.execute("""
 CREATE TABLE IF NOT EXISTS email_user_info (
     username TEXT PRIMARY KEY,
@@ -34,6 +37,7 @@ conn.commit()
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 465
 
+# Functions
 def save_data():
     data_to_save = st.session_state.df.to_dict(orient="list")
     c.execute("""
@@ -125,13 +129,12 @@ def email_send():
     except Exception as error:
         st.error(f"Une erreur est survenue : {error}")
 
-
 def clear_table():
     initialize_default_dataframe()
     save_data()
     load_data()
 
-def delete_row(del_index, headings):
+def delete_row(del_index):
     if 0 <= del_index < len(st.session_state.df):
         st.session_state.df = st.session_state.df.drop(index=del_index).reset_index(drop=True)
         for i in range(len(st.session_state.df)):
@@ -139,10 +142,11 @@ def delete_row(del_index, headings):
         save_data()
         load_data()
 
+# Main UI
 if st.session_state.logged_in:
     if st.button("Se déconnecter"):
-    st.session_state.logged_in = False
-    st.rerun()
+        st.session_state.logged_in = False
+        st.rerun()
 
     if "df" not in st.session_state:
         load_data()
@@ -152,17 +156,22 @@ if st.session_state.logged_in:
 
     if "toggled" not in st.session_state:
         st.session_state.toggled = False
-
     if "user_mail" not in st.session_state:
         st.session_state.user_mail = ""
-
     if "app_password" not in st.session_state:
         st.session_state.app_password = ""
 
     headings = st.session_state.df.columns.tolist()
 
-    st.session_state.user_mail = st.text_input("Saisir l'adresse électronique de l'utilisateur", value=st.session_state.user_mail)
-    st.session_state.app_password = st.text_input("Saisir le mot de passe de l'application", value=st.session_state.app_password, type="password")
+    st.session_state.user_mail = st.text_input(
+        "Saisir l'adresse électronique de l'utilisateur",
+        value=st.session_state.user_mail
+    )
+    st.session_state.app_password = st.text_input(
+        "Saisir le mot de passe de l'application",
+        value=st.session_state.app_password,
+        type="password"
+    )
     st.caption("Comment obtenir un MOT DE PASSE APP : https://support.google.com/accounts/answer/185833?hl=en")
 
     st.title("Remplissez les informations de l'email :")
@@ -210,7 +219,11 @@ if st.session_state.logged_in:
         email_send()
 
     st.button("Effacer l'aperçu 🗑", on_click=clear_table)
-    del_index = st.selectbox("Supprimer la ligne", options=range(0, list_length))
-    st.button("Confirmer la suppression", on_click=delete_row, args=(del_index, headings))
+
+    if list_length > 0:
+        del_index = st.selectbox("Supprimer la ligne", options=range(0, list_length))
+        st.button("Confirmer la suppression", on_click=delete_row, args=(del_index,))
+    else:
+        st.info("Aucune ligne à supprimer.")
 else:
     st.warning("Veuillez d'abord vous connecter.")
