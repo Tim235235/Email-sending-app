@@ -21,10 +21,6 @@ if "logged_in" not in st.session_state:
 if "username" not in st.session_state:
     st.session_state.username = "demo_user"
 
-if st.button("Se déconnecter"):
-    st.session_state.logged_in = False
-    st.rerun()
-
 c.execute("""
 CREATE TABLE IF NOT EXISTS email_user_info (
     username TEXT PRIMARY KEY,
@@ -144,6 +140,9 @@ def delete_row(del_index, headings):
         load_data()
 
 if st.session_state.logged_in:
+    if st.button("Se déconnecter"):
+    st.session_state.logged_in = False
+    st.rerun()
 
     if "df" not in st.session_state:
         load_data()
@@ -213,3 +212,5 @@ if st.session_state.logged_in:
     st.button("Effacer l'aperçu 🗑", on_click=clear_table)
     del_index = st.selectbox("Supprimer la ligne", options=range(0, list_length))
     st.button("Confirmer la suppression", on_click=delete_row, args=(del_index, headings))
+else:
+    st.warning(""Veuillez d'abord vous connecter.")
