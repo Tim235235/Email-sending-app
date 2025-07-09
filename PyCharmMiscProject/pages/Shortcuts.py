@@ -120,8 +120,7 @@ def dft_view():
             col4, col5, col6 = st.columns([3, 11, 2.8])
             with col4:
                 try:
-                    if st.button("Ouvrir l'application", key=f"open_{key}"):
-                        webbrowser.open_new_tab(st.session_state.dvs_dic[key][1])
+                    link_open(st.session_state.dvs_dic[key][1])
                 except KeyError:
                     st.error("Pas d'URL associée.")
             with col5:
@@ -152,8 +151,7 @@ def dtl_view():
         except MediaFileStorageError:
             pass
     st.session_state.dvs_dic[dvs_key] = [description, link, url]
-    if st.button("Ouvrir l'application"):
-        link_open(link)
+    link_open(link)
     if st.button("Retour"):
         st.session_state.df_view = True
         st.rerun()
