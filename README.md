@@ -1,4 +1,4 @@
-Hosted on STREAMLIT CLOUD --> https://email-sending-app-b8wzwescbzmqjnhm9gyzos.streamlit.app/Shortcuts
+Hosted on STREAMLIT CLOUD --> https://email-sending-app-t87gzfdsq4dal3wqm6dgvw.streamlit.app/
 
 Usage:
 1. Create account using the SIGN UP page --> Recommended not to use an already existing password and/or email
