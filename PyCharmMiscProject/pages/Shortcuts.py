@@ -80,7 +80,7 @@ def delete_box(key):
 
 def link_open(url):
     if url:
-        webbrowser.open_new_tab(url)
+        st.link_button("Ouvrir l'application", url)
     else:
         st.warning("Aucune URL fournie.")
 
